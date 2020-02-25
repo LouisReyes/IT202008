@@ -83,23 +83,36 @@ if(isset($_POST['email']) && isset($_POST['password']) && isset($_POST['confirm'
 			}
 		</script>
 	</head>
+ <style>
+ body{
+ background-image: url('https://wallpapershome.com/images/pages/pic_h/21456.jpg');
+ background-repeat: no-repeat;
+ background-position: center;
+ font-size: 50px;
+ font-weight: 900;
+ color: white;
+ background-color: black;
+ }
+ </style>
 			<body onload="findFormsOnLoad();>
+      
 				<form name = "regform' id = "myForm" method = "POST" onsubmit = "return doValidations(this)">
-					<div>
+        
+					<div align = "center">
 					<label for = "email"> Email: </label><br>
 					<input type = "email" id = "email" placeholder = "enter Email"/>
 					<span id = "email_error"></span>
 					</div>
-					<div>
+					<div align = "center">
 					<label for = "pass"> Password: <label><br>
 					<input type = "password" id = "pass" name="password" placeholder = "Enter password"/>
 					</div>
-					<div>
+					<div align = "center">
 					<label for = "Con"> Confirm Password: </label><br>
 					<input type = "password" id = "con" name="confirm"/>
 					<span id = "password_error"></span>
 					</div>
-					<div>
+					<div align = "center">
 					<input type="submit" value = "Register"/>
 					</div>
 				</form>
