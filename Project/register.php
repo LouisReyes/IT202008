@@ -1,39 +1,37 @@
+
 <?php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 if(isset($_POST['email']) && isset($_POST['password']) && isset($_POST['confirm'])){
-	$pas = $_POST['password'];
+	$pass = $_POST['password'];
 	$con = $_POST['confirm'];
-	if($pas == $con){
+	if($pass != $con){
 		//echo "GOOD, 'Registering'";
-		$msg = "All good, registered";
+		$msg = "Passwords do not match!";
 	}else{
 		//echo "Really?";
-		$msg = "Password dont match";
-		exit();
-	}
-	
-	$pas = password_hash($pas, PASSWORD_BCRYPT); //hash
-	echo "<br> '$pas' </br>";
-	//hashed
-	
-	require("config.php");
-	$connection_string = "mysql:host=$dbhost;dbname=$dbdatabase;charset=utf8mb4";
-	try{$db = new PDO($connection_string, $dbuser, $dbpass);
-		$stmt = $db->prepare("INSERT INTO 'Users2'(email, password) VALUES(;email, :password)");
+		$msg = "Everything is good here";
+	  $pass = password_hash($pass, PASSWORD_BCRYPT); //hash
+	  echo "<br> '$pass' </br>";
+	  //hashed
+	  require("config.php");
+	  $connection_string = "mysql:host=$dbhost;dbname=$dbdatabase;charset=utf8mb4";
+	  try{
+    $db = new PDO($connection_string, $dbuser, $dbpass);
+	  $stmt = $db->prepare("INSERT INTO 'Users2'
+    (email, password) VALUES(:email,:password)");
 		$email = $_POST ['email'];
-		$params = array (":email" => $email, ":password" => $pas);
+		$params = array (":email" => $email, ":password" => $pass);
 		$stmt -> execute($params);
-		echo "<pre>" . var_export($stmt->errorInfo(),true) . "<pre>";
+		echo "<pre>" . var_export($stmt->errorInfo(),true) . "</pre>";
 	}catch(Exception $e){
 		echo $e -> getMessage();
 		exit();
-	}
-	
+	}	
 }
-
+}
 ?>
 
 <html>
@@ -42,12 +40,13 @@ if(isset($_POST['email']) && isset($_POST['password']) && isset($_POST['confirm'
 			Project - Register 
 		</title>
 		<script>
+   /*
 			function findFormsOnLoad(){
 			let myForm = document.forms.regform;
 			let mySameForm = document.getElementById("myForm");
 			console.log("Form by name", myForm);
 			console.log("Form by id", mySameForm);
-			}
+			} */
 			function doValidations(form){
 				let isValid = true;
 				if(!verifyEmail(form)){
@@ -60,7 +59,8 @@ if(isset($_POST['email']) && isset($_POST['password']) && isset($_POST['confirm'
 			function verifyEmail(form){
 				let ee = document.getElementById("email_error");
 				if(form.email.value.trim().length == 0){
-					ee.interText = "please enter email";
+          ee.innerText = "please enter email";
+          return false; 
 				}else{
 					ee.innerText = "";
 					return true;
@@ -68,17 +68,17 @@ if(isset($_POST['email']) && isset($_POST['password']) && isset($_POST['confirm'
 			}
 			function verifyPasswords(form){
 					let pe = document.getElementById("password_error");
-					if(form.password.length == 0 || form.confirm.value.length == 0){
+					if(form.password.value.length == 0 || form.confirm.value.length == 0){
 					//alert("You must enter both a password and confirmation password");
-					pe.innerText = "You must enter both a password and a confirm password"; 
+					pe.innerText = "You need to enter both a password and confirm password"; 
 					return false;
 				}
 				if(form.password.value != form.confirm.value){
 					//alert("typo");
-					pe.innerText = "You must enter both a password and a confirm password"; 
+					pe.innerText = "try again passwords don't match"; 
 					return false;
 				}
-				pe.innerText= " ";
+				pe.innerText= "";
 				return true;
 			}
 		</script>
@@ -94,25 +94,26 @@ if(isset($_POST['email']) && isset($_POST['password']) && isset($_POST['confirm'
  background-color: black;
  }
  </style>
-			<body onload="findFormsOnLoad();>
+			<body onload="findFormsOnLoad();">
       
-				<form name = "regform' id = "myForm" method = "POST" onsubmit = "return doValidations(this)">
+				<form name = "regform" id = "myForm" method = "POST" onsubmit = "return doValidations(this)">
         
 					<div align = "center">
 					<label for = "email"> Email: </label><br>
-					<input type = "email" id = "email" placeholder = "enter Email"/>
+					<input type = "email" id = "email" name = "email" placeholder = "Enter Email"/>
 					<span id = "email_error"></span>
 					</div>
 					<div align = "center">
-					<label for = "pass"> Password: <label><br>
+					<label for = "pass"> Password: </label><br>
 					<input type = "password" id = "pass" name="password" placeholder = "Enter password"/>
 					</div>
 					<div align = "center">
-					<label for = "Con"> Confirm Password: </label><br>
-					<input type = "password" id = "con" name="confirm"/>
+					<label for = "con"> Confirm Password: </label><br>
+					<input type = "password" id = "con" name="confirm" placeholder = "ReEnter Password"/>
 					<span id = "password_error"></span>
 					</div>
 					<div align = "center">
+           <div>&nbsp;</div>
 					<input type="submit" value = "Register"/>
 					</div>
 				</form>
@@ -120,6 +121,4 @@ if(isset($_POST['email']) && isset($_POST['password']) && isset($_POST['confirm'
 				<span><?php echo $msg;?></span>
 				<?php endif;?>
 			</body>
-		
-	
 </html>
