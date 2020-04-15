@@ -1,12 +1,25 @@
 <html>
-<body style = "background-image: url('https://wallpaperaccess.com/full/39607.jpg');" text = "white">
+<head>
+//<embed src="Mega.mp3" width="180" height="90" loop="true" autostart="false" hidden="true" />
+<iframe width="0" height="0" src="Laugh.wav" frameborder="0" allowfullscreen></iframe>
+//<embed src="Laugh.wav" width="180" height="90" loop="false" autostart="false" hidden="true" />
+<br>
+SPACE-INVADERS
+</head>
+
+<body style = "background-image: url('https://wallpaperaccess.com/full/39607.jpg');" text = "white" align = "center">
+
+
+
+<div>
 Press r to restart
-	<canvas id="canvas" width="600px" height="300px" style="border: 1px solid black;" >
-	</canvas>
+</div>
+
+<canvas id="canvas" width="600px" height="300px" style="border: 1px solid black;" align = "center"></canvas>
 	
 <script>
 // Arcade Shooter game
-
+//var lives = 3;
 // Get a reference to the canvas DOM element
 var canvas = document.getElementById('canvas');
 // Get the canvas drawing context
@@ -175,20 +188,33 @@ function shoot() {
 function draw() {
   erase();
   var gameOver = false;
+  var lives = 3; //-----
   // Move and draw the enemies
   enemies.forEach(function(enemy) {
     enemy.x -= enemy.s;
-    if (enemy.x < 0) {
+     if (enemy.x < 0) {
+       lives--;
+       //gameOver = true;
+      }
+      
+      if(lives == 0){
       gameOver = true;
-    }
+      }
+      
     context.fillStyle = '#00FF00';
     enemy.draw();
   });
   // Collide the ship with enemies
   enemies.forEach(function(enemy, i) {
     if (isColliding(enemy, ship)) {
+      
+      lives--;
+      
+      //gameOver = true;
+      }
+      if(lives == 0){//----
       gameOver = true;
-    }
+      }
   });
   // Move the ship
   if (down) {
